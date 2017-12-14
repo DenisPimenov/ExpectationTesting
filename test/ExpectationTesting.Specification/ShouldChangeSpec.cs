@@ -88,5 +88,18 @@ namespace ExpectationTesting.Specification
             var result = cfg.Assert();
             result.Should().BeFalse();
         }
+
+        [Fact]
+        public void Assert_Should_Be_False_If_Nested_Reference_Prop_Not_Changed()
+        {
+            //arrange
+            var entity = new Entity();
+            var cfg = Except.That(entity)
+                .ShouldChange(obj => obj.Address);
+
+            //assert
+            var result = cfg.Assert();
+            result.Should().BeFalse();
+        }
     }
 }

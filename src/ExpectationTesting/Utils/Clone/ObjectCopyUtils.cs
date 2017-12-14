@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using ExpectationTesting.Utils.ArrayExtensions;
+using ExpectationTesting.Utils.Clone.ArrayExtensions;
 using JetBrains.Annotations;
 
-namespace ExpectationTesting.Utils
+namespace ExpectationTesting.Utils.Clone
 {
     internal static class ObjectExtensions
     {
-        private static readonly MethodInfo CloneMethod = typeof(object).GetMethod("MemberwiseClone", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo CloneMethod =
+            typeof(object).GetMethod("MemberwiseClone", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static bool IsPrimitive(this Type type)
         {
@@ -25,11 +26,15 @@ namespace ExpectationTesting.Utils
         [CanBeNull]
         private static object InternalCopy([CanBeNull] object originalObject, IDictionary<object, object> visited)
         {
-            if (originalObject == null) return null;
+            if (originalObject == null)
+                return null;
             var typeToReflect = originalObject.GetType();
-            if (IsPrimitive(typeToReflect)) return originalObject;
-            if (visited.ContainsKey(originalObject)) return visited[originalObject];
-            if (typeof(Delegate).IsAssignableFrom(typeToReflect)) throw new ArgumentException("Delegate is not supported",nameof(originalObject));
+            if (IsPrimitive(typeToReflect))
+                return originalObject;
+            if (visited.ContainsKey(originalObject))
+                return visited[originalObject];
+            if (typeof(Delegate).IsAssignableFrom(typeToReflect))
+                throw new ArgumentException("Delegate is not supported",nameof(originalObject));
             var cloneObject = CloneMethod.Invoke(originalObject, null);
             if (typeToReflect.IsArray)
             {
@@ -74,65 +79,4 @@ namespace ExpectationTesting.Utils
             return (T)Copy((object)original);
         }
     }
-
-    public class ReferenceEqualityComparer : EqualityComparer<object>
-    {
-        public override bool Equals(object x, object y)
-        {
-            return ReferenceEquals(x, y);
-        }
-        public override int GetHashCode(object obj)
-        {
-            if (obj == null) return 0;
-            return obj.GetHashCode();
-        }
-    }
-
-    namespace ArrayExtensions
-    {
-        public static class ArrayExtensions
-        {
-            public static void ForEach(this Array array, Action<Array, int[]> action)
-            {
-                if (array.LongLength == 0) return;
-                var walker = new ArrayTraverse(array);
-                do action(array, walker.Position);
-                while (walker.Step());
-            }
-        }
-
-        internal class ArrayTraverse
-        {
-            public int[] Position;
-            private int[] maxLengths;
-
-            public ArrayTraverse(Array array)
-            {
-                maxLengths = new int[array.Rank];
-                for (var i = 0; i < array.Rank; ++i)
-                {
-                    maxLengths[i] = array.GetLength(i) - 1;
-                }
-                Position = new int[array.Rank];
-            }
-
-            public bool Step()
-            {
-                for (var i = 0; i < Position.Length; ++i)
-                {
-                    if (Position[i] < maxLengths[i])
-                    {
-                        Position[i]++;
-                        for (var j = 0; j < i; j++)
-                        {
-                            Position[j] = 0;
-                        }
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-    }
-
 }

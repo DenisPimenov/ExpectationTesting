@@ -8,7 +8,7 @@ namespace ExpectationTesting
         public static ConfigurableAssertion<T> ShouldChange<T, TProp>(this ConfigurableAssertion<T>assertion,
             Func<T, TProp> expression) where T : class
         {
-            assertion.AddRule(new ShouldChangeRule<T,TProp>(expression));
+            assertion.AddRule(new ShouldChangeRule<T,TProp>(assertion.Original,assertion.Current,expression));
             return assertion;
         }
     }

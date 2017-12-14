@@ -8,23 +8,6 @@ namespace ExpectationTesting.Specification
 {
     public class ConfigurableAssertionSpec
     {
-        public class SimpleRule<T,TProp>:IRule<T>
-        {
-            private readonly Func<T, TProp> propFunc;
-            private readonly Func<TProp, bool> condition;
-
-            public SimpleRule(Func<T,TProp> propFunc ,Func<TProp,bool> condition)
-            {
-                this.propFunc = propFunc;
-                this.condition = condition;
-            }
-
-            public bool Assert(T original, T current)
-            {
-                return condition.Invoke(propFunc.Invoke(current));
-            }
-        }
-
         [Fact]
         public void Assert_Should_Return_True_If_Havent_Rules()
         {
@@ -38,10 +21,29 @@ namespace ExpectationTesting.Specification
         {
             var entity = new Entity();
             var assertion = Except.That(entity);
-            assertion.AddRule(new SimpleRule<Entity,int>(_ => _.Id,i => i>100));
+            assertion.AddRule(new SimpleRule<Entity, int>(entity,_ => _.Id, i => i > 100));
             entity.Id = 200;
             var result = assertion.Assert();
             result.Should().BeTrue();
+        }
+
+        public class SimpleRule<T, TProp> : IRule
+        {
+            private readonly T current;
+            private readonly Func<T, TProp> propFunc;
+            private readonly Func<TProp, bool> condition;
+
+            public SimpleRule(T current, Func<T, TProp> propFunc, Func<TProp, bool> condition)
+            {
+                this.current = current;
+                this.propFunc = propFunc;
+                this.condition = condition;
+            }
+
+            public bool Assert()
+            {
+                return condition.Invoke(propFunc.Invoke(current));
+            }
         }
     }
 }

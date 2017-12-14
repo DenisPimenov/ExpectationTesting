@@ -1,7 +1,7 @@
 ﻿namespace ExpectationTesting.Rules
 {
-    public interface IRule<T>
+    public interface IRule
     {
-        bool Assert(T original,T current);
+        bool Assert();
     }
 }

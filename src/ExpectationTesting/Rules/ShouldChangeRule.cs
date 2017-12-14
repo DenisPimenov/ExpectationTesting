@@ -2,16 +2,20 @@
 
 namespace ExpectationTesting.Rules
 {
-    internal class ShouldChangeRule<T, TProp> : IRule<T> where T:class
+    internal class ShouldChangeRule<T, TProp> : IRule where T:class
     {
+        private readonly T original;
+        private readonly T current;
         private readonly Func<T, TProp> expression;
 
-        public ShouldChangeRule(Func<T, TProp> expression)
+        public ShouldChangeRule(T original, T current,Func<T, TProp> expression)
         {
+            this.original = original;
+            this.current = current;
             this.expression = expression;
         }
 
-        public bool Assert(T original, T current)
+        public bool Assert()
         {
             var originalValue = expression(original);
             var currentValue = expression(current);
