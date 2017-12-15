@@ -4,21 +4,20 @@ namespace ExpectationTesting.Rules
 {
     internal class ShouldChangeRule<T, TProp> : IRule where T:class
     {
-        private readonly T original;
-        private readonly T current;
+        private readonly T Object;
+        private readonly TProp originalValue;
         private readonly Func<T, TProp> expression;
 
-        public ShouldChangeRule(T original, T current,Func<T, TProp> expression)
+        public ShouldChangeRule(T @object,Func<T, TProp> expression)
         {
-            this.original = original;
-            this.current = current;
+            Object = @object;
+            originalValue = expression(@object);
             this.expression = expression;
         }
 
         public bool Assert()
         {
-            var originalValue = expression(original);
-            var currentValue = expression(current);
+            var currentValue = expression(Object);
             return !Equals(currentValue, originalValue);
         }
     }

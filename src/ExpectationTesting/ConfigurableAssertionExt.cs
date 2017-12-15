@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Linq.Expressions;
 using ExpectationTesting.Rules;
+
 
 namespace ExpectationTesting
 {
     public static class ConfigurableAssertionExt
     {
         public static ConfigurableAssertion<T> ShouldChange<T, TProp>(this ConfigurableAssertion<T>assertion,
-            Func<T, TProp> expression) where T : class
+            Expression<Func<T, TProp>> expression) where T : class
         {
-            assertion.AddRule(new ShouldChangeRule<T,TProp>(assertion.Original,assertion.Current,expression));
+            assertion.AddRule(new ShouldChangeRule<T,TProp>(assertion.Object,expression.Compile()));
             return assertion;
         }
     }

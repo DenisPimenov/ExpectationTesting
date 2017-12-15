@@ -31,8 +31,8 @@ using System.Runtime.CompilerServices;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable InconsistentNaming
 
-// ReSharper disable once CheckNamespace
 [assembly: InternalsVisibleTo("ExpectationTesting.Specification")]
+// ReSharper disable once CheckNamespace
 namespace JetBrains.Annotations
 {
     /// <summary>

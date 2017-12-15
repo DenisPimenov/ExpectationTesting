@@ -9,13 +9,10 @@ namespace ExpectationTesting.Specification
         [Fact]
         public void Assert_Should_Be_True_If_Prop_Changed()
         {
-            //arrange
             var entity = new Entity();
             var cfg = Except.That(entity)
                 .ShouldChange(obj => obj.Id);
-            //act
             entity.Id = 10;
-            //assert
             var result = cfg.Assert();
             result.Should().BeTrue();
         }
@@ -23,15 +20,12 @@ namespace ExpectationTesting.Specification
         [Fact]
         public void Assert_Should_Be_True_If_Props_Changed()
         {
-            //arrange
-            var entity = new Entity ();
+            var entity = new Entity();
             var cfg = Except.That(entity)
                 .ShouldChange(obj => obj.Id)
                 .ShouldChange(obj => obj.Name);
-            //act
             entity.Id = 10;
             entity.Name = string.Empty;
-            //assert
             var result = cfg.Assert();
             result.Should().BeTrue();
         }
@@ -39,11 +33,9 @@ namespace ExpectationTesting.Specification
         [Fact]
         public void Assert_Should_Be_False_If_Prop_Not_Changed()
         {
-            //arrange
             var entity = new Entity {Name = string.Empty};
             var cfg = Except.That(entity)
                 .ShouldChange(obj => obj.Name);
-            //assert
             var result = cfg.Assert();
             result.Should().BeFalse();
         }
@@ -51,14 +43,11 @@ namespace ExpectationTesting.Specification
         [Fact]
         public void Assert_Should_Be_False_If_All_Props_Not_Changed()
         {
-            //arrange
             var entity = new Entity();
             var cfg = Except.That(entity)
                 .ShouldChange(obj => obj.Id)
                 .ShouldChange(obj => obj.Name);
-            //act
             entity.Id = 10;
-            //assert
             var result = cfg.Assert();
             result.Should().BeFalse();
         }
@@ -66,13 +55,10 @@ namespace ExpectationTesting.Specification
         [Fact]
         public void Assert_Should_Be_True_If_Nested_Prop_Changed()
         {
-            //arrange
             var entity = new Entity();
             var cfg = Except.That(entity)
                 .ShouldChange(obj => obj.Address.Name);
-            //act
-            entity.Address.Name =string.Empty;
-            //assert
+            entity.Address.Name = string.Empty;
             var result = cfg.Assert();
             result.Should().BeTrue();
         }
@@ -80,11 +66,9 @@ namespace ExpectationTesting.Specification
         [Fact]
         public void Assert_Should_Be_False_If_Nested_Prop_Not_Changed()
         {
-            //arrange
-            var entity = new Entity ();
+            var entity = new Entity();
             var cfg = Except.That(entity)
                 .ShouldChange(obj => obj.Address.Name);
-            //assert
             var result = cfg.Assert();
             result.Should().BeFalse();
         }
@@ -92,14 +76,23 @@ namespace ExpectationTesting.Specification
         [Fact]
         public void Assert_Should_Be_False_If_Nested_Reference_Prop_Not_Changed()
         {
-            //arrange
             var entity = new Entity();
             var cfg = Except.That(entity)
                 .ShouldChange(obj => obj.Address);
-
-            //assert
+            entity.Address.Name = string.Empty;
             var result = cfg.Assert();
             result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Assert_Should_Be_True_If_Nested_Reference_Prop_Changed()
+        {
+            var entity = new Entity();
+            var cfg = Except.That(entity)
+                .ShouldChange(obj => obj.Address);
+            entity.Address = new Address();
+            var result = cfg.Assert();
+            result.Should().BeTrue();
         }
     }
 }
