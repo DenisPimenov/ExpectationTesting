@@ -1,30 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ExpectationTesting.Rules;
-using ExpectationTesting.Utils;
 
 namespace ExpectationTesting
 {
     public class ConfigurableAssertion<T> where T : class
     {
-        private readonly T original;
-        private readonly T current;
+        internal  T Object { get; }
 
-        private readonly List<IRule<T>> rules = new List<IRule<T>>();
+        private readonly List<IRule> rules = new List<IRule>();
 
         internal ConfigurableAssertion(T @object)
         {
-            original = @object.Copy() ?? throw new ArgumentException("cannot be null", nameof(@object));
-            current = @object;
+            Object = @object;
         }
 
         public bool Assert()
         {
-            return rules.Aggregate(true, (result, rule) => result & rule.Assert(original, current));
+            return rules.Aggregate(true, (result, rule) => result & rule.Assert());
         }
 
-        public void AddRule(IRule<T> rule)
+        public void AddRule(IRule rule)
         {
             rules.Add(rule);
         }

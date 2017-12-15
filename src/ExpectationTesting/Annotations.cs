@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 using System;
+using System.Runtime.CompilerServices;
 
 #pragma warning disable 1591
 // ReSharper disable UnusedMember.Global
@@ -30,6 +31,7 @@ using System;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable InconsistentNaming
 
+[assembly: InternalsVisibleTo("ExpectationTesting.Specification")]
 // ReSharper disable once CheckNamespace
 namespace JetBrains.Annotations
 {
