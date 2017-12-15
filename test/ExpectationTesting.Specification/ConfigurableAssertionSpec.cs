@@ -12,7 +12,7 @@ namespace ExpectationTesting.Specification
         public void Assert_Should_Return_True_If_Havent_Rules()
         {
             var entity = new Entity();
-            var assertion = Except.That(entity);
+            var assertion = Expect.That(entity);
             assertion.Assert().Should().BeTrue();
         }
 
@@ -20,7 +20,7 @@ namespace ExpectationTesting.Specification
         public void Can_Add_Simple_Rule_Then_Assert()
         {
             var entity = new Entity();
-            var assertion = Except.That(entity);
+            var assertion = Expect.That(entity);
             assertion.AddRule(new SimpleRule<Entity, int>(entity,_ => _.Id, i => i > 100));
             entity.Id = 200;
             var result = assertion.Assert();

@@ -1,6 +1,6 @@
 ﻿namespace ExpectationTesting
 {
-    public static class Except
+    public static class Expect
     {
         public static ConfigurableAssertion<T> That<T>(T obj) where T : class
         {
